@@ -1,0 +1,22 @@
+.input,
+.borderedInput {
+  width: calc(100% - 22px);
+  height: calc(100% - 4px);
+  padding: 0 5px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  font-size: 17px;
+}
+.input:hover,
+.input:focus {
+  border-bottom: 2px solid #ff8a65;
+}
+.borderedInput {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.borderedInput:hover,
+.borderedInput:focus {
+  border: 1px solid #ff8a65;
+}

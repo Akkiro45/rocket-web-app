@@ -1,0 +1,37 @@
+.root {
+  height: 45px;
+  width: 100%;
+  background-color: #ff5722;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.title {
+  height: 40px;
+  width: 63%;
+  display: flex;
+  padding: 0 7px;
+  align-items: center;
+  font-size: 20px;
+  color: #fff;
+}
+.titleText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.icon {
+  height: 40px;
+  width: 12%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 25px;
+  cursor: pointer;
+}
+@media(min-width: 550px) {
+  .root {
+    display: none;
+  }
+}

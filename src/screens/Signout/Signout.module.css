@@ -1,0 +1,27 @@
+.root {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  overflow: auto;
+}
+.container {
+  height: calc(100% - 50px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.text {
+  color: #ff7043;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+@media(max-width: 550px) {
+  .container {
+    height: 100%;
+  }
+}

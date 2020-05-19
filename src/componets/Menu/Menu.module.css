@@ -1,0 +1,27 @@
+.menu {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.item {
+  width: 100%;
+  height: 30px;
+  /* background-color: blueviolet;   */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #000;
+}
+.item:hover {
+  background-color: #eee;
+}
+.divider {
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+}

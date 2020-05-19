@@ -1,0 +1,17 @@
+.root {
+  width: 250px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.spinner {
+  margin: 20px 0;
+}
+.text {
+  color: #ff7043;
+  font-weight: 500;
+  font-size: 18px;
+  margin: 10px 0;
+}

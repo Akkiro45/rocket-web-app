@@ -1,0 +1,19 @@
+.Select { 
+  background-color: white;
+  height: calc(100% - 2px);
+  width: calc(100% - 12px);
+  padding: 0 5px;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.Select option::-ms-expand {
+  background-color: #ff8a65;
+  cursor: pointer;
+}
+.Select:hover,
+.Select:active,
+.Select:focus {
+  border: 1px solid #ff8a65;
+}
