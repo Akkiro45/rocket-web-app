@@ -1,12 +1,9 @@
-import fetch from 'isomorphic-fetch';
-import domino from 'domino';
-import {getMetadata} from 'page-metadata-parser';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import axios from '../../axios';
-import { SET_LINKS, ADD_LINK, SET_CURR } from './actionTypes';
-import { startLoading, stopLoading, setError, resetError } from './index';
+import { SET_LINKS, ADD_LINK, SET_CURR, SET_HIDE } from './actionTypes';
+import { startLoading, stopLoading, resetError, errorExtractor } from './index';
 
 export const addLink = (link) => {
   return {
@@ -29,6 +26,13 @@ export const setCurr = (id) => {
   }
 }
 
+export const setHide = (hide) => {
+  return {
+    type: SET_HIDE,
+    hide
+  }
+}
+
 export const onAddLink = (token, data, done) => {
   return async dispatch => {
     dispatch(startLoading());
@@ -36,25 +40,6 @@ export const onAddLink = (token, data, done) => {
       'x-auth': token
     }
     try {
-      try {
-        const res = await fetch(data.url);
-        const html = await res.text();
-        const doc = domino.createWindow(html).document;
-        const metadata = getMetadata(doc, data.url);
-        if(!metadata) {
-          throw new Error('Error!');
-        }
-        data = {
-          ...data,
-          data: {
-            url: data.url,
-            title: metadata.title,
-            description: metadata.description,
-            image: metadata.image,
-            logo: metadata.icon
-          }
-        }
-      } catch(e) {}
       const response = await axios.post('/link/add', data, { headers });
       if(response) {
         if(response.data.status === 'ok') {
@@ -62,7 +47,7 @@ export const onAddLink = (token, data, done) => {
           let links = localStorage.getItem('links');
           links = JSON.parse(links);
           if(!links) {
-            links = []
+            links = [];
           }
           links.unshift(response.data.data);
           localStorage.setItem('links', JSON.stringify(links));
@@ -73,14 +58,7 @@ export const onAddLink = (token, data, done) => {
         }
       }
     } catch(error) {
-      dispatch(stopLoading());
-      if(error.response) {
-        if(error.response.data.status === 'error') {
-          dispatch(setError(error.response.data.error.msg));
-        }
-      } else {
-        dispatch(setError('Something went wrong!'));
-      }
+      errorExtractor(dispatch, error);
     }
   }
 }
@@ -112,13 +90,11 @@ export const onRemoveLink = (token, id, links) => {
       dispatch(stopLoading());
       if(error.response) {
         if(error.response.data.status === 'error') {
-          // dispatch(setError(error.response.data.error.msg));
           toast.error(error.response.data.error.msg, {
             position: toast.POSITION.TOP_CENTER
           });
         }
       } else {
-        // dispatch(setError('Something went wrong!'));
         toast.error('Something went wrong!', {
           position: toast.POSITION.TOP_CENTER
         });
@@ -148,13 +124,50 @@ export const fetchLinks = (token, history) => {
         }
       }
     } catch(error) {
+      errorExtractor(dispatch, error);
+    }
+  }
+}
+
+export const editLink = (token, id, type, value, links) => {
+  return async (dispatch) => {
+    dispatch(setCurr(id));
+    dispatch(resetError());
+    dispatch(startLoading());
+    const headers = {
+      'x-auth': token
+    }
+    const data = {
+      id,
+      type,
+      value
+    }
+    try {
+      const response = await axios.patch(`/link/edit`, data, { headers });
+      if(response.data.status === 'ok') {
+        const linkIndex = links.findIndex(link => link._id === id);
+        if(linkIndex !== -1) {
+          links[linkIndex][type] = value;
+        }
+        dispatch(setLinks(links));
+        localStorage.setItem('links', JSON.stringify(links));
+        dispatch(stopLoading());
+        dispatch(setCurr(null));
+      } else {
+        throw new Error('Error!');
+      }
+    } catch(error) {
       dispatch(stopLoading());
       if(error.response) {
         if(error.response.data.status === 'error') {
-          dispatch(setError(error.response.data.error.msg));
+          toast.error(error.response.data.error.msg, {
+            position: toast.POSITION.TOP_CENTER
+          });
         }
       } else {
-        dispatch(setError('Something went wrong!'));
+        toast.error('Something went wrong!', {
+          position: toast.POSITION.TOP_CENTER
+        });
       }
     }
   }

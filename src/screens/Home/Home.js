@@ -5,9 +5,9 @@ import SyncLoader from "react-spinners/SyncLoader";
 import { ToastContainer } from 'react-toastify';
 
 import module from './Home.module.css';
-import { fetchLinks, resetError } from '../../store/actions/index';
+import { fetchLinks, resetError, setHide } from '../../store/actions/index';
 
-import { User, ADD, SORT_ASC, SORT_DESC, ROCKET } from '../../util/icons';
+import { User, ADD, SORT_ASC, SORT_DESC, ROCKET, EYE, EYE_OFF } from '../../util/icons';
 import filter from '../../util/filter';
 import Header from '../../componets/Header/Header';
 import MobileHeader from '../../componets/MobileHeader/MobileHeader';
@@ -16,6 +16,7 @@ import Input from '../../componets/Input/Input';
 import Select from '../../componets/Select/Select';
 import Link from '../../componets/Link/Link';
 import AddLinkModal from '../../componets/AddLinkModal/AddLinkModal';
+import PwdCheckModal from '../../componets/PwdCheckModal/PwdCheckModal';
 
 class Home extends Component {
   state = {
@@ -23,7 +24,8 @@ class Home extends Component {
     search: '',
     currGroup: 'All',
     drawer: false,
-    showAddLinkModal: false
+    showAddLinkModal: false,
+    showCheckPwdModal: false
   }
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
@@ -38,6 +40,11 @@ class Home extends Component {
   onSortClick = () => {
     this.setState(prevState => {
       return { order: !prevState.order }
+    });
+  }
+  onHideModelClick = () => {
+    this.setState(prevState => {
+      return { showCheckPwdModal: !prevState.showCheckPwdModal }
     });
   }
   onDrawerClick = () => {
@@ -75,7 +82,7 @@ class Home extends Component {
       );
     }
     let items = null;
-    if(this.props.links.length === 0  && !this.props.loading) {
+    if(filter(this.props.links, this.state.currGroup, this.state.search, this.state.order, this.props.hide).length === 0  && !this.props.loading) {
       items = (
         <div className={module.emty} >
           <ROCKET style={{ fontSize: '50px' }} />
@@ -85,7 +92,7 @@ class Home extends Component {
     } else {
       items = (
         <div className={module.items} >
-          {filter(this.props.links, this.state.currGroup, this.state.search, this.state.order).map((link, i) => {
+          {filter(this.props.links, this.state.currGroup, this.state.search, this.state.order, this.props.hide).map((link, i) => {
             return (
               <Link  
                 link={link}
@@ -106,6 +113,11 @@ class Home extends Component {
           order={this.state.order}
           onSortClick={this.onSortClick}
           onDrawerClick={this.onDrawerClick}
+          hide={this.props.hide}
+        />
+        <PwdCheckModal 
+          visible={this.state.showCheckPwdModal}
+          onClick={this.onHideModelClick}
         />
         <Drawer 
           show={this.state.drawer} 
@@ -113,6 +125,9 @@ class Home extends Component {
           toggleTheme={this.props.toggleTheme} 
           mode={this.props.mode}
           onSignoutClick={() => this.props.history.replace('/signout')}
+          onHideModelClick={this.onHideModelClick}
+          hide={this.props.hide}
+          onSetHide={this.props.onSetHide}
         />
         <div className={module.filters} >
           <div className={module.filterItem1}>
@@ -135,6 +150,15 @@ class Home extends Component {
           </div>
           <div className={module.filterItem2} onClick={this.onSortClick} >
             {this.state.order ? <SORT_DESC /> : <SORT_ASC />}
+          </div>
+          <div className={module.filterItem2} onClick={() => {
+            if(this.props.hide) {
+              this.onHideModelClick();
+            } else {
+              this.props.onSetHide(true);
+            }
+          }} >
+            {this.props.hide ? <EYE /> : <EYE_OFF />}
           </div>
           <div className={module.filterItem2} onClick={this.onShowAddLinkModal} >
             <ADD />
@@ -166,6 +190,13 @@ class Home extends Component {
               borderedInput
             />
           </div>
+          {this.props.hide ? null :
+          (
+            <div className={module.hideButton} onClick={() => this.props.onSetHide(true)} >
+              <div style={{ marginRight: 10 }} >Hide</div>
+              <EYE_OFF style={{ fontSize: 18 }} />
+            </div>
+          )}
         </div>
         {loading}
         {items}
@@ -181,14 +212,16 @@ const mapStateToProps = state => {
     loading: state.loading.loading,
     error: state.error.error,
     groups: state.link.groups,
-    links: state.link.links
+    links: state.link.links,
+    hide: state.link.hide
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     onFetchLinks: (token) => dispatch(fetchLinks(token)),
-    onResetError: () => dispatch(resetError())
+    onResetError: () => dispatch(resetError()),
+    onSetHide: (hide) => dispatch(setHide(hide)) 
   }
 }
 

@@ -98,7 +98,7 @@
 }
 .layer {
   width: 150px;
-  height: 100px;
+  /* height: 130px; */
 }
 .loading {
   width: 100%;

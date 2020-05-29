@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import RingLoader from "react-spinners/RingLoader";
 
 import module from './AddLinkModal.module.css';
-import { ROCKET, ALERT } from '../../util/icons';
+import { ROCKET, ALERT, TOGGLE_OFF, TOGGLE_ON } from '../../util/icons';
 import { isEmty } from '../../util/util';
 import { resetError, onAddLink } from '../../store/actions/index';
 import Modal from '../Modal/Modal';
@@ -15,21 +15,26 @@ class AddLinkModal extends Component {
     url: '',
     currGroup: 'None',
     group: '',
-    error: null
+    error: null,
+    hide: false
   }
   componentDidMount() {
     navigator.clipboard.readText()
       .then(text => {
-        console.log(text)
         this.setState({ url: text });
       })
       .catch(() => {});
+  }
+  onToggleHide = () => {
+    this.setState(prevState => {
+      return { hide: !prevState.hide };
+    });
   }
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value, error: null });
   }
   onReset = () => {
-    this.setState({ url: '', currGroup: 'None', group: '', error: null });
+    this.setState({ url: '', currGroup: 'None', group: '', error: null, hide: false });
   }
   onPressAdd = () => {
     if(isEmty(this.state.url)) {
@@ -39,7 +44,8 @@ class AddLinkModal extends Component {
     } else {
       const data = {
         url: this.state.url,
-        group: this.state.currGroup === 'Add New' ? this.state.group : this.state.currGroup
+        group: this.state.currGroup === 'Add New' ? this.state.group : this.state.currGroup,
+        hide: this.state.hide
       }
       this.props.onAddLink(this.props.token, data, () => {
         this.onReset();
@@ -57,7 +63,7 @@ class AddLinkModal extends Component {
     groups.unshift('Add New');
     let grp = (
       <div className={module.item} >
-        <div className={module.tag} >Tag : </div>
+        <div className={module.tag} >Tag </div>
           <div style={{ height: '100%', width: '75%' }} >
             <Select 
               name='currGroup'
@@ -97,7 +103,11 @@ class AddLinkModal extends Component {
             />
           </div>
           {grp}
-          <div className={module.reset} onClick={this.onReset} >Reset</div>
+          <div className={module.item1} >
+            <div style={{ marginRight: 10 }} >Hide</div>
+            {this.state.hide ? <TOGGLE_ON onClick={this.onToggleHide} className={module.toggleIcon}  /> : <TOGGLE_OFF onClick={this.onToggleHide} className={module.toggleIcon} />}
+          </div>
+          <div className={module.reset} onClick={this.onReset} >reset</div>
         </div>
         <div className={module.footer} >
           <div className={module.error} > 

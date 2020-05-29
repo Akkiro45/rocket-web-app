@@ -5,7 +5,7 @@ import RingLoader from "react-spinners/RingLoader";
 
 import module from './Link.module.css';
 import { MORE_VERTICAL, ROCKET } from '../../util/icons';
-import { onRemoveLink } from '../../store/actions/index';
+import { onRemoveLink, editLink } from '../../store/actions/index';
 import Menu from '../Menu/Menu';
 
 class Link extends Component {
@@ -61,6 +61,8 @@ class Link extends Component {
                     link={this.props.link} 
                     close={close} 
                     onRemoveLink={() => this.props.onRemoveLink(this.props.token, this.props.link._id, this.props.links)}
+                    onEditLink={() => this.props.onEditLink(this.props.token, this.props.link._id, 'hide', true, this.props.links)}
+                    hide={this.props.hide}
                   />
                   <Arrow
                     style={arrowStyle}
@@ -160,13 +162,15 @@ const mapStateToProps = state => {
     error: state.error.error,
     curr: state.link.curr,
     token: state.auth.token,
-    links: state.link.links
+    links: state.link.links,
+    hide: state.link.hide
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onRemoveLink: (token, id, links) => dispatch(onRemoveLink(token, id, links))
+    onRemoveLink: (token, id, links) => dispatch(onRemoveLink(token, id, links)),
+    onEditLink: (token, id, type, value, links) => dispatch(editLink(token, id, type, value, links))
   }
 }
 

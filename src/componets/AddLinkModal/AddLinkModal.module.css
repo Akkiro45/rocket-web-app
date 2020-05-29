@@ -57,13 +57,20 @@
   font-size: 17px;
   font-weight: 500;
 }
-.item {
+.item, 
+.item1 {
   /* background-color: blueviolet; */
   width: 300px;
   height: 35px;
   margin: 10px 0;
   display: flex;
   justify-content: space-between;
+}
+.item1 {
+  width: 100px;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
 }
 .reset {
   color: #ff7043;
@@ -93,6 +100,10 @@
   color: #f44336;
   font-size: 35px;
   margin: 15px 0;
+}
+.toggleIcon {
+  font-size: 25px;
+  cursor: pointer;
 }
 
 @media(max-width: 950px) {

@@ -14,7 +14,9 @@ export {
   FiSettings as SETTING,
   FiMoreHorizontal as MORE_HORIZONTAL,
   FiMoreVertical as MORE_VERTICAL,
-  FiTrash2 as DELETE
+  FiTrash2 as DELETE,
+  FiEye as EYE,
+  FiEyeOff as EYE_OFF
 } from "react-icons/fi";
 
 // FontAwesome

@@ -1,6 +1,6 @@
 import axios from '../../axios';
 import { AUTH_SUCCESS, SIGNOUT, SET_DONE } from './actionTypes';
-import { startLoading, resetError, stopLoading, setError, setLinks } from './index';
+import { startLoading, resetError, stopLoading, setError, setHide, setLinks, errorExtractor } from './index';
 
 export const authSuccess = (data) => {
   return {
@@ -62,14 +62,7 @@ export const auth = (data, isSignin, history) => {
         history.replace('/');
       })
       .catch(error => {
-        dispatch(stopLoading());
-        if(error.response) {
-          if(error.response.data.status === 'error') {
-            dispatch(setError(error.response.data.error.msg));
-          }
-        } else {
-          dispatch(setError('Something went wrong!'));
-        }
+        errorExtractor(dispatch, error);
       });
   }
 }
@@ -103,14 +96,7 @@ export const getResetPwdToken = (data) => {
         throw new Error('Error!');
       }
     } catch(error) {
-      dispatch(stopLoading());
-      if(error.response) {
-        if(error.response.data.status === 'error') {
-          dispatch(setError(error.response.data.error.msg));
-        }
-      } else {
-        dispatch(setError('Something went wrong!'));
-      }
+      errorExtractor(dispatch, error);
     }
   }
 }
@@ -126,14 +112,7 @@ export const validateResetPwdToken = (token) => {
         throw new Error('Error!');
       }
     } catch(error) {
-      dispatch(stopLoading());
-      if(error.response) {
-        if(error.response.data.status === 'error') {
-          dispatch(setError(error.response.data.error.msg));
-        }
-      } else {
-        dispatch(setError('Something went wrong!'));
-      }
+      errorExtractor(dispatch, error);
     }
   }
 }
@@ -152,14 +131,31 @@ export const resetPwd = (data) => {
         throw new Error('Error!');
       }
     } catch(error) {
-      dispatch(stopLoading());
-      if(error.response) {
-        if(error.response.data.status === 'error') {
-          dispatch(setError(error.response.data.error.msg));
-        }
-      } else {
-        dispatch(setError('Something went wrong!'));
-      }
+      errorExtractor(dispatch, error);
     }
   }
+}
+
+export const checkPassword = (password, token) => {
+  return async (dispatch) => {
+    dispatch(startLoading());
+    const data = {
+      password
+    }
+    const headers = {
+      'x-auth': token
+    }
+    try {
+      const response = await axios.post('/user/check/password', data, { headers });
+      if(response.data.status === 'ok') {
+        dispatch(setHide(false));
+        dispatch(stopLoading());
+      } else {
+        dispatch(stopLoading());
+        dispatch(setError('Invalid password!'));
+      }
+    } catch(error) {
+      errorExtractor(dispatch, error);
+    }
+  }  
 }

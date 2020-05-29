@@ -2,7 +2,7 @@ import React from 'react';
 
 import module from './Drawer.module.css';
 import Aux from '../Auxx/Auxx';
-import { SIGNOUT, TOGGLE_OFF, TOGGLE_ON } from '../../util/icons';
+import { SIGNOUT, TOGGLE_OFF, TOGGLE_ON, EYE, EYE_OFF } from '../../util/icons';
 import { emailID, webLink } from '../../util/util';
 
 const drawer = (props) => {
@@ -21,6 +21,26 @@ const drawer = (props) => {
           Dark mode
           {props.mode !== 'LIGHT' ? <TOGGLE_ON className={module.icon} onClick={props.toggleTheme} /> : <TOGGLE_OFF className={module.icon} onClick={props.toggleTheme} />}
         </div>
+        <div className={module.divider} ></div>
+        {props.hide ? 
+        (
+          <div className={module.item2} onClick={() => {
+            props.onHideModelClick();
+            props.onClick();
+          }} >
+            <EYE className={module.icon} />
+            Show hidden
+          </div>
+        ) : 
+        (
+          <div className={module.item2} onClick={() => {
+            props.onSetHide(true);
+            props.onClick();
+          }} >
+            <EYE_OFF className={module.icon} />
+            Hide
+          </div>
+        )}
         <div className={module.divider} ></div>
         <div className={module.item2} onClick={props.onSignoutClick} >
           <SIGNOUT className={module.icon} />

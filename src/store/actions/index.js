@@ -15,7 +15,8 @@ export {
   getResetPwdToken,
   validateResetPwdToken,
   resetPwd,
-  setDone
+  setDone,
+  checkPassword
 } from './auth';
 
 export {
@@ -23,5 +24,11 @@ export {
   setLinks,
   onRemoveLink,
   setCurr,
-  fetchLinks
+  fetchLinks,
+  setHide,
+  editLink
 } from './link';
+
+export {
+  errorExtractor
+} from './errorExtractor';
