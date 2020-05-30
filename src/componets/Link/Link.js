@@ -61,7 +61,7 @@ class Link extends Component {
                     link={this.props.link} 
                     close={close} 
                     onRemoveLink={() => this.props.onRemoveLink(this.props.token, this.props.link._id, this.props.links)}
-                    onEditLink={() => this.props.onEditLink(this.props.token, this.props.link._id, 'hide', true, this.props.links)}
+                    onEditLink={(op) => this.props.onEditLink(this.props.token, this.props.link._id, 'hide', op, this.props.links)}
                     hide={this.props.hide}
                   />
                   <Arrow

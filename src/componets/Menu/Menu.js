@@ -19,24 +19,23 @@ const onDelete = (close, onRemoveLink) => {
   onRemoveLink();
   close();
 }
-const onHide = (onEditLink, close) => {
-  onEditLink();
+const onHide = (onEditLink, close, op) => {
+  onEditLink(op);
   close();
 }
 
 const menu = (props) => {
   return (
-    <div className={module.menu} style={{ height: props.hide ? 130 : 100  }} >
+    <div className={module.menu} >
       <div className={module.item} onClick={() => onOpen(props.link.url, props.close)} >Open</div>
       <div className={module.divider} ></div>
       <div className={module.item} onClick={() => onCopyURL(props.link.url, props.close)} >Copy URL</div>
-      {props.hide ?
-      (
-        <div>
-          <div className={module.divider} ></div>
-          <div className={module.item} style={{ color: '#ff8a65' }} onClick={() => onHide(props.onEditLink, props.close)} >Hide</div>
+      <div>
+        <div className={module.divider} ></div>
+        <div className={module.item} style={{ color: '#ff8a65' }} onClick={() => onHide(props.onEditLink, props.close, !props.link.hide)} >
+          {props.link.hide ? 'Unhide' : 'Hide'}
         </div>
-      ) : null}
+      </div>
       <div className={module.divider} ></div>
       <div className={module.item} style={{ color: '#f44336' }} onClick={() => onDelete(props.close, props.onRemoveLink)} >Delete</div>
     </div>
