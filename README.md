@@ -4,7 +4,7 @@ Link saver website to access links anytime, anywhere.
 </br>
 [**Website**](https://rocket-linksaver.web.app/)
 </br>
-[**Android App**](https://github.com/Akkiro45/assets/blob/master/rocket/apk/app-universal-release.apk)
+[**Android App(Play Store)**](https://play.google.com/store/apps/details?id=com.rocketlinksaver)
 
 
 ## Built With
