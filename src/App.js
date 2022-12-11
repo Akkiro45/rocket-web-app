@@ -3,6 +3,7 @@ import { Route, Switch, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { autoSignin, setLinks } from './store/actions/index';
+import { setupFirebase } from './firebaseSetup';
 import Signin from './screens/Signin/Signin';
 import Signup from './screens/Signup/Signup';
 import Signout from './screens/Signout/Signout';
@@ -15,6 +16,7 @@ class App extends Component {
     theme: 'LIGHT'
   }
   componentDidMount() {
+    setupFirebase();
     const theme = localStorage.getItem('theme');
     if(theme === 'DARK') {
       this.changeTheme();
